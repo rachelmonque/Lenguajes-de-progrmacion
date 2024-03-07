@@ -1,3 +1,4 @@
+;-----------------------------------------------------------------------------------------------------------------
 ;Ejercicio 1
 
 ; Definir una lista de productos
@@ -63,7 +64,7 @@
 ; Función auxiliar para verificar si una cadena contiene la subcadena
 (define (substring-contains? cadena subcadena)
   (regexp-match? (regexp (string-upcase subcadena)) (string-upcase cadena)))
-
+;---------------------------------------------------------------------------------------------------
 ; Ejemplos de uso
 (define listaEjemplo1 '("la casa" "es amarrila" "la reja es roja"))
 (define subcadenaEjemplo1 "la")
