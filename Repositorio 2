@@ -1,0 +1,110 @@
+;Ejercicio 1
+
+; Definir una lista de productos
+(define ListaProductos '(("arroz" 8 6000)
+                         ("frijoles" 5 5000)
+                         ("azucar" 6 1100)
+                         ("cafe" 2 2800)
+                         ("leche" 9 6000)))
+
+; Definir una lista de facturas de ventas
+(define Factura1 '(("arroz" 3 6000) ("cafe" 2 2800) ("frijoles" 1 5000)))
+
+(define Factura2 '(("arroz" 2 6000) ("azucar" 3 1100) ("leche" 4 6000)))
+
+(define (agregarProducto Lista nombre cantidad precio)
+  (cond ((null? Lista) (list (list nombre cantidad precio)))
+        ((string=? nombre (caar Lista))
+         (cons (list nombre (+ (cadr (car Lista)) cantidad) precio) (cdr Lista)))
+        ((zero? cantidad) (cdr Lista))
+        (else
+         (cons (car Lista) (agregarProducto (cdr Lista)
+                                            nombre
+                                            cantidad
+                                            precio)))))
+
+(define (venderProducto Lista nombre cantidad)
+  (cond ((null? Lista) (displayln "Lista vacía") '())
+        ((string=? nombre (caar Lista))
+         (if (>= cantidad (cadr (car Lista)))
+             (displayln "Cantidad insuficiente")
+             (cons (list nombre (- (cadr (car Lista)) cantidad) (caddr (car Lista))) (cdr Lista))))
+        (else
+         (cons (car Lista) (venderProducto (cdr Lista) nombre cantidad)))))
+
+(define (calcularImpuesto factura umbral)
+  (define (calcularImpuestoProducto producto)
+    (if (>= (caddr producto) umbral)
+        (* (caddr producto) 0.13)
+        0))
+
+  (apply + (map calcularImpuestoProducto factura)))
+
+(define (calcularMontoTotalSinImpuesto factura)
+  (apply + (map (lambda (producto) (* (cadr producto) (caddr producto))) factura)))
+
+; Ejemplos de uso
+(display "Factura 1:\n")
+(display "Impuesto total a cancelar: ")
+(displayln (calcularImpuesto Factura1 6000))
+(display "Monto total sin impuesto: ")
+(displayln (calcularMontoTotalSinImpuesto Factura1))
+
+(display "\nFactura 2:\n")
+(display "Impuesto total a cancelar: ")
+(displayln (calcularImpuesto Factura2 6000))
+(display "Monto total sin impuesto: ")
+(displayln (calcularMontoTotalSinImpuesto Factura2))
+
+;Ejercio 2
+(define (filtrarPorSubcadena subcadena lista)
+  (filter (lambda (cadena) (substring-contains? cadena subcadena)) lista))
+
+; Función auxiliar para verificar si una cadena contiene la subcadena
+(define (substring-contains? cadena subcadena)
+  (regexp-match? (regexp (string-upcase subcadena)) (string-upcase cadena)))
+
+; Ejemplos de uso
+(define listaEjemplo1 '("la casa" "es amarrila" "la reja es roja"))
+(define subcadenaEjemplo1 "la")
+
+(define listaEjemplo2 '("No hay dinero" "o tal vez si" "No se puede gastar"))
+(define subcadenaEjemplo2 "no")
+
+(define listaEjemplo3 '("Hay comida" "pero es sopa" "y no me gusta esa comida"))
+(define subcadenaEjemplo3 "comida")
+
+(displayln "Ejemplo 1:")
+(display "Lista original: ")
+(display listaEjemplo1)
+(newline)
+(display "Subcadena a buscar: ")
+(display subcadenaEjemplo1)
+(newline)
+(display "Resultado después de filtrar: ")
+(display (filtrarPorSubcadena subcadenaEjemplo1 listaEjemplo1))
+(newline)
+(newline)
+
+(displayln "Ejemplo 2:")
+(display "Lista original: ")
+(display listaEjemplo2)
+(newline)
+(display "Subcadena a buscar: ")
+(display subcadenaEjemplo2)
+(newline)
+(display "Resultado después de filtrar: ")
+(display (filtrarPorSubcadena subcadenaEjemplo2 listaEjemplo2))
+(newline)
+(newline)
+
+(displayln "Ejemplo 3:")
+(display "Lista original: ")
+(display listaEjemplo3)
+(newline)
+(display "Subcadena a buscar: ")
+(display subcadenaEjemplo3)
+(newline)
+(display "Resultado después de filtrar: ")
+(display (filtrarPorSubcadena subcadenaEjemplo3 listaEjemplo3))
+(newline)   
